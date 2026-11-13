@@ -31,4 +31,10 @@ document.addEventListener('DOMContentLoaded', function () {
       }
     });
   }
+  // Forms with data-confirm ask "Are you sure?" before submitting (e.g. cancel booking)
+  document.querySelectorAll('form[data-confirm]').forEach(function (f) {
+    f.addEventListener('submit', function (event) {
+      if (!window.confirm(f.dataset.confirm)) { event.preventDefault(); }
+    });
+  });
 });
