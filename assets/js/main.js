@@ -16,6 +16,11 @@ document.addEventListener('DOMContentLoaded', function () {
     var today = new Date().toISOString().split('T')[0];
     checkIn.min = today;
     checkOut.min = today;
+    if (checkIn.value) {            // form pre-filled (e.g. after a search)
+      var after = new Date(checkIn.value);
+      after.setDate(after.getDate() + 1);
+      checkOut.min = after.toISOString().split('T')[0];
+    }
     checkIn.addEventListener('change', function () {
       var next = new Date(checkIn.value);
       next.setDate(next.getDate() + 1);

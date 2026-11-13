@@ -93,4 +93,12 @@ include __DIR__ . '/includes/header.php';
     </div>
   </div>
 </section>
+<section class="cta-band">
+  <img src="<?= BASE_URL ?>/assets/images/plan-your-stay.jpg" alt="Starfish, shell and sunglasses on a sunny beach">
+  <div class="cta-band-text">
+    <h2>Plan your stay</h2>
+    <p>Choose your dates, pick a room and book in minutes.</p>
+    <a class="btn btn-gold" href="<?= BASE_URL ?>/rooms.php">Plan Your Stay</a>
+  </div>
+</section>
 <?php include __DIR__ . '/includes/footer.php'; ?>

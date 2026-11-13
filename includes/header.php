@@ -21,12 +21,13 @@ $flash = flash();
   <title><?= e($pageTitle) ?> | <?= e(SITE_NAME) ?></title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Playfair+Display:ital,wght@0,600;1,600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="<?= BASE_URL ?>/assets/css/style.css">
+  <link rel="icon" type="image/png" href="<?= BASE_URL ?>/assets/images/favicon.png">
+  <link rel="stylesheet" href="<?= BASE_URL ?>/assets/css/style.css?v=<?= filemtime(__DIR__ . '/../assets/css/style.css') ?>">
 </head>
 <body>
 <header class="site-header">
   <a class="brand" href="<?= BASE_URL ?>/index.php">
-    <img src="<?= BASE_URL ?>/assets/images/logo-light.png" alt="Azure Breeze Villa logo">
+    <img src="<?= BASE_URL ?>/assets/images/logo.png" alt="Azure Breeze Villa logo">
     <span class="brand-text">Azure Breeze<small>VILLA</small></span>
   </a>
   <button class="nav-toggle" id="navToggle" aria-label="Open menu" aria-expanded="false">Menu</button>

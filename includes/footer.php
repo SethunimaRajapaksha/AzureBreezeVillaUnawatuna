@@ -1,7 +1,7 @@
 </main>
 <footer class="site-footer">
   <a class="brand" href="<?= BASE_URL ?>/index.php">
-    <img src="<?= BASE_URL ?>/assets/images/logo-light.png" alt="Azure Breeze Villa logo">
+    <img src="<?= BASE_URL ?>/assets/images/logo.png" alt="Azure Breeze Villa logo">
     <span class="brand-text">Azure Breeze<small>VILLA</small></span>
   </a>
   <div class="footer-mid">Unawatuna &middot; Sri Lanka</div>
