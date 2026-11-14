@@ -100,3 +100,55 @@ function facility_list(string $text): array
 {
     return array_values(array_filter(array_map('trim', explode(',', $text))));
 }
+
+/** Nice booking reference, e.g. 42 becomes "BK-0042". */
+function booking_ref(int $id): string
+{
+    return 'BK-' . str_pad((string)$id, 4, '0', STR_PAD_LEFT);
+}
+
+/**
+ * Finds another CONFIRMED booking for the same room that overlaps the given dates.
+ * Returns that booking (with the room name) or null when the dates are free.
+ * $excludeBookingId stops a booking from clashing with itself.
+ */
+function find_conflicting_booking(PDO $pdo, int $roomId, string $checkIn, string $checkOut, int $excludeBookingId = 0): ?array
+{
+    $stmt = $pdo->prepare("SELECT b.booking_id, b.check_in, b.check_out, r.room_name
+                           FROM bookings b JOIN rooms r ON r.room_id = b.room_id
+                           WHERE b.room_id = ? AND b.booking_status = 'Confirmed'
+                             AND b.booking_id <> ? AND ? < b.check_out AND ? > b.check_in
+                           LIMIT 1");
+    $stmt->execute([$roomId, $excludeBookingId, $checkIn, $checkOut]);
+    $row = $stmt->fetch();
+    return $row ?: null;
+}
+
+/**
+ * Validates and stores an uploaded room photo in assets/images/rooms/.
+ * Returns the new file name, or null with a message in $error.
+ */
+function save_room_image(array $file, string &$error): ?string
+{
+    if (($file['error'] ?? UPLOAD_ERR_NO_FILE) !== UPLOAD_ERR_OK) {
+        $error = 'The image could not be uploaded. Please try again.';
+        return null;
+    }
+    if ($file['size'] > 2 * 1024 * 1024) {
+        $error = 'The image must be smaller than 2 MB.';
+        return null;
+    }
+    $info  = @getimagesize($file['tmp_name']);       // reads the real file type, not the file name
+    $types = ['image/jpeg' => 'jpg', 'image/png' => 'png', 'image/webp' => 'webp'];
+    if (!$info || !isset($types[$info['mime']])) {
+        $error = 'Only JPG, PNG or WebP images are allowed.';
+        return null;
+    }
+    $name = 'room-' . bin2hex(random_bytes(8)) . '.' . $types[$info['mime']];   // random name, never the user's
+    $dir  = dirname(__DIR__) . '/assets/images/rooms/';
+    if (!move_uploaded_file($file['tmp_name'], $dir . $name)) {
+        $error = 'The image could not be saved on the server.';
+        return null;
+    }
+    return $name;
+}
