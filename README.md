@@ -42,7 +42,7 @@ Layouts for desktop, tablet and mobile using CSS media queries (mobile menu, sta
 3. Open **phpMyAdmin** (`http://localhost/phpmyadmin`), choose the **Import** tab (without selecting a database) and import `db_structure.sql`.
    This creates the database `azure_breeze_villa` with tables and sample data.
 4. Check the database settings in `config/db.php` (defaults: host `127.0.0.1`, port `3306`, user `root`, empty password).
-5. Open the site: `http://localhost/<folder-name>/` (the base URL is detected automatically).
+5. Open the site: `http://localhost/AzureBreezeVillaUnawatuna/` (the base URL is detected automatically).
 6. Edit the villa contact details in `config/config.php` (address, phone, email, check-in/out times, WhatsApp).
 
 ## Sample login credentials (fictional test accounts)
@@ -50,7 +50,7 @@ Layouts for desktop, tablet and mobile using CSS media queries (mobile menu, sta
 | Role  | Email                  | Password   |
 |-------|------------------------|------------|
 | Admin | admin@azurebreeze.lk   | Admin@123  |
-| Guest | guest@example.com      | Guest@123  |
+| Guest | guest@example.com      | Guest1234  |
 | Guest | nimali@example.com     | Guest@123  |
 | Guest | kasun@example.com      | Guest@123  |
 
@@ -89,15 +89,14 @@ login.php, register.php, logout.php, db_structure.sql
 ```
 
 ## Use of generative AI (declaration)
-I used **Claude (Anthropic)** as an assistant during this project. It helped me plan the system, create the colour palette and
-page mock-ups, and write and explain parts of the PHP, JavaScript, CSS and SQL code. I reviewed, tested and adjusted the
-code myself and I can explain how it works.
+I used **Claude (Anthropic)** as an assistant during this project. It helped me plan the system, create the colour palette and page mock-ups, and write and explain parts of the PHP, JavaScript, CSS and SQL code. I reviewed, decided the colour palette, tested and adjusted the code myself and I can explain how it works.
 
 ## External resources and credits
-- Fonts: Inter and Playfair Display (Google Fonts)
-- Map: Google Maps embed on the Contact page
-- Photographs and logo: **[add the source and licence of your photos and logo here, for example stock sites or AI-generated images]**
-- No external PHP or JavaScript libraries are used.
+- **Fonts:** Inter and Playfair Display (Google Fonts)
+- **Map:** Google Maps embed on the Contact page
+- **Photographs:** Selected imagery sourced from Pinterest for design reference and mood boarding
+- **Logo:** Custom-designed logo created specifically for Azure Breeze Villa
+- **No external PHP or JavaScript libraries are used.**
 
 ## Author
-Sethunima Rajapaksha
+Sethunima Rajapaksha . 24IT0526 . Web Technologies
