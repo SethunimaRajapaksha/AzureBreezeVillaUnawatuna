@@ -294,3 +294,59 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
   .admin-main { padding: 24px 16px; }
   .stat-cards, .stat-cards.small, .admin-form .form-grid { grid-template-columns: 1fr; }
 }
+
+/* ===== Contact, About, Facilities, Gallery ===== */
+.contact-layout { display: grid; grid-template-columns: 380px 1fr; gap: 32px; align-items: start; }
+.info-card { background: var(--navy); color: var(--ivory); border-radius: 20px; padding: 32px; }
+.info-card h2, .form-card h2 { font-size: 1.7rem; margin-bottom: 20px; }
+.info-item { margin-bottom: 18px; line-height: 1.5; }
+.info-item span { display: block; font-size: .75rem; color: var(--glass); margin-bottom: 2px; }
+.form-card { background: #fff; border-radius: 20px; padding: 32px; box-shadow: var(--shadow); }
+.honeypot { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+.map-section { padding-top: 0; }
+.map-frame { width: 100%; height: 340px; border: 0; border-radius: 20px; box-shadow: var(--shadow); }
+.split { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: center; }
+.split-photo { height: 380px; border-radius: 20px; overflow: hidden; box-shadow: var(--shadow); }
+.split-photo img { width: 100%; height: 100%; object-fit: cover; }
+.body-text { color: var(--muted); line-height: 1.8; margin: 0 0 14px; }
+.band-soft { background: var(--glass-soft); }
+.center-head { text-align: center; margin-bottom: 28px; }
+.card-grid { display: grid; gap: 24px; }
+.card-grid.three { grid-template-columns: repeat(3, 1fr); }
+.info-tile { background: #fff; border-radius: 18px; padding: 30px; box-shadow: var(--shadow); }
+.info-tile h3 { font-size: 1.5rem; margin-bottom: 10px; }
+.info-tile p { color: var(--muted); line-height: 1.7; margin: 0; }
+.feature-card { background: #fff; border-radius: 18px; overflow: hidden; box-shadow: var(--shadow); }
+.feature-photo { height: 190px; }
+.feature-photo img { width: 100%; height: 100%; object-fit: cover; }
+.feature-body { padding: 20px 22px; }
+.feature-body h3 { font-size: 1.3rem; margin-bottom: 6px; }
+.feature-body p { margin: 0; color: var(--muted); font-size: .9rem; line-height: 1.6; }
+.strip { display: flex; justify-content: space-around; flex-wrap: wrap; gap: 16px; font-weight: 600; }
+.cta-plain { background: var(--glass-soft); color: var(--navy); min-height: 0; }
+.cta-plain::after { display: none; }
+.cta-band-text.center { text-align: center; padding: 56px 20px; }
+.cta-plain .cta-band-text h2 { margin-bottom: 18px; }
+.chips { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; margin-bottom: 28px; }
+.chip { background: var(--glass-soft); color: var(--navy); border: 0; padding: 9px 20px; border-radius: 999px; font: inherit; font-size: .9rem; cursor: pointer; }
+.chip.active { background: var(--navy); color: #fff; }
+.gallery-grid { column-count: 4; column-gap: 16px; }
+.gallery-item { display: block; width: 100%; margin: 0 0 16px; padding: 0; border: 0; border-radius: 14px; overflow: hidden; cursor: zoom-in; break-inside: avoid; background: none; }
+.gallery-item[hidden] { display: none; }
+.gallery-item img { width: 100%; height: auto; transition: transform .3s; }
+.gallery-item:hover img { transform: scale(1.04); }
+.lightbox { position: fixed; inset: 0; z-index: 100; background: rgba(4, 28, 56, .94); display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 24px; cursor: zoom-out; }
+.lightbox[hidden] { display: none; }
+.lightbox img { max-width: 92vw; max-height: 80vh; border-radius: 12px; }
+.lightbox-caption { color: var(--ivory); margin: 14px 0 0; }
+.lightbox-close { position: absolute; top: 16px; right: 24px; background: none; border: 0; color: var(--ivory); font-size: 2.4rem; cursor: pointer; }
+.no-scroll { overflow: hidden; }
+.message-card .message-head { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+.message-body { margin: 14px 0; line-height: 1.7; }
+@media (max-width: 992px) { .contact-layout, .split { grid-template-columns: 1fr; } .card-grid.three { grid-template-columns: repeat(2, 1fr); } .gallery-grid { column-count: 3; } }
+@media (max-width: 768px) { .card-grid.three { grid-template-columns: 1fr; } .gallery-grid { column-count: 2; } }
+
+/* ===== Profile page ===== */
+.stack { display: grid; gap: 24px; }
+.summary-card .btn-block { margin-top: 20px; }
+.form-group input:disabled { background: var(--glass-soft); color: var(--muted); }

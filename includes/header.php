@@ -42,6 +42,7 @@ $flash = flash();
         <a class="btn btn-outline-light" href="<?= BASE_URL ?>/admin/dashboard.php">Admin</a>
       <?php else: ?>
         <a class="btn btn-outline-light" href="<?= BASE_URL ?>/guest/my-bookings.php">My Bookings</a>
+        <a class="btn btn-outline-light" href="<?= BASE_URL ?>/guest/profile.php">Profile</a>
       <?php endif; ?>
       <a class="btn btn-gold" href="<?= BASE_URL ?>/logout.php">Logout</a>
     <?php else: ?>

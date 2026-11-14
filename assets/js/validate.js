@@ -6,6 +6,9 @@ document.addEventListener('DOMContentLoaded', function () {
     name: function (v) { return (v.trim().length >= 2 && v.trim().length <= 100) || 'Enter your full name (2-100 characters).'; },
     email: function (v) { return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v.trim()) || 'Enter a valid email address.'; },
     phone: function (v) { return /^\+?[0-9 ]{9,15}$/.test(v.trim()) || 'Enter a valid phone number (9-15 digits).'; },
+    phoneopt: function (v) { return v.trim() === '' || /^\+?[0-9 ]{9,15}$/.test(v.trim()) || 'Enter a valid phone number or leave it empty.'; },
+    subject: function (v) { return (v.trim().length >= 2 && v.trim().length <= 150) || 'Enter a subject (2-150 characters).'; },
+    message: function (v) { return (v.trim().length >= 10 && v.trim().length <= 2000) || 'Your message must be 10-2000 characters.'; },
     password: function (v) {
       return (v.length >= 8 && /[A-Za-z]/.test(v) && /\d/.test(v)) || 'Use at least 8 characters with a letter and a number.';
     }
