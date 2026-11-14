@@ -10,6 +10,7 @@ $adminNav  = [
     'rooms'     => ['Manage Rooms',    '/admin/rooms.php'],
     'bookings'  => ['Manage Bookings', '/admin/bookings.php'],
     'messages'  => ['Messages',        '/admin/messages.php'],
+    'reviews'   => ['Reviews',         '/admin/reviews.php'],
 ];
 ?>
 <!DOCTYPE html>

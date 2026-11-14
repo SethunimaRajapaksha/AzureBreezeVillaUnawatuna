@@ -1,6 +1,7 @@
 <?php
 // index.php - Home page
 require_once __DIR__ . '/config/db.php';
+require_once __DIR__ . '/includes/functions.php';
 $pageTitle  = 'Home';
 $activePage = 'home';
 
@@ -9,6 +10,8 @@ $stmt = $pdo->prepare("SELECT room_id, room_name, description, price_per_night, 
                        FROM rooms WHERE room_status = 'active' ORDER BY price_per_night ASC LIMIT 3");
 $stmt->execute();
 $featured = $stmt->fetchAll();
+$guestReviews = latest_reviews($pdo, 3);
+$siteRating   = site_rating_stats($pdo);
 
 include __DIR__ . '/includes/header.php';
 ?>
@@ -93,6 +96,28 @@ include __DIR__ . '/includes/header.php';
     </div>
   </div>
 </section>
+<?php if ($guestReviews): ?>
+<section class="section band-soft">
+  <div class="container">
+    <div class="center-head">
+      <div class="eyebrow">GUEST REVIEWS</div>
+      <h2 class="section-title">What our guests say</h2>
+      <p class="overall-rating"><span class="big-score"><?= number_format($siteRating['avg'], 1) ?></span> <?= stars_html($siteRating['avg']) ?>
+        <span class="muted">from <?= $siteRating['count'] ?> review<?= $siteRating['count'] === 1 ? '' : 's' ?></span></p>
+    </div>
+    <div class="card-grid three">
+      <?php foreach ($guestReviews as $rv): ?>
+        <article class="review-card">
+          <?= stars_html((float)$rv['rating']) ?>
+          <p class="review-text">&ldquo;<?= e($rv['comment']) ?>&rdquo;</p>
+          <div class="review-author"><?= e(display_name($rv['guest_name'])) ?> &middot; <?= e($rv['room_name']) ?></div>
+        </article>
+      <?php endforeach; ?>
+    </div>
+  </div>
+</section>
+<?php endif; ?>
+
 <section class="cta-band">
   <img src="<?= BASE_URL ?>/assets/images/plan-your-stay.jpg" alt="Starfish, shell and sunglasses on a sunny beach">
   <div class="cta-band-text">

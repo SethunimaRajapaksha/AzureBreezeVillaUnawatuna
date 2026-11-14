@@ -33,8 +33,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['action'] ?? '') === 'cance
 $allowed = ['Pending', 'Confirmed', 'Cancelled'];
 $filter  = in_array($_GET['status'] ?? '', $allowed, true) ? $_GET['status'] : '';
 
-$sql    = 'SELECT b.*, r.room_name, r.image FROM bookings b
+$sql    = 'SELECT b.*, r.room_name, r.image, rv.rating AS review_rating FROM bookings b
            JOIN rooms r ON r.room_id = b.room_id
+           LEFT JOIN reviews rv ON rv.booking_id = b.booking_id
            WHERE b.user_id = :uid';
 $params = [':uid' => $userId];
 if ($filter !== '') {
@@ -90,6 +91,13 @@ include __DIR__ . '/../includes/header.php';
               <input type="hidden" name="booking_id" value="<?= (int)$b['booking_id'] ?>">
               <button type="submit" class="btn btn-danger btn-sm">Cancel booking</button>
             </form>
+          <?php endif; ?>
+          <?php if ($b['booking_status'] === 'Confirmed' && $b['check_out'] < date('Y-m-d')): ?>
+            <?php if ($b['review_rating'] !== null): ?>
+              <p class="review-done">You reviewed this stay: <?= stars_html((float)$b['review_rating']) ?></p>
+            <?php else: ?>
+              <a class="btn btn-gold btn-sm" href="<?= BASE_URL ?>/guest/review.php?booking_id=<?= (int)$b['booking_id'] ?>">Write a review</a>
+            <?php endif; ?>
           <?php endif; ?>
         </div>
       </article>

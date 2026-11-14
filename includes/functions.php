@@ -152,3 +152,57 @@ function save_room_image(array $file, string &$error): ?string
     }
     return $name;
 }
+
+/** Star rating as text stars, e.g. 4.4 shows four full stars and one grey star. */
+function stars_html(float $rating): string
+{
+    $full = max(0, min(5, (int)round($rating)));
+    return '<span class="stars" role="img" aria-label="' . e(number_format($rating, 1)) . ' out of 5">'
+        . str_repeat('★', $full) . '<span class="off">' . str_repeat('★', 5 - $full) . '</span></span>';
+}
+
+/** "Nimali Perera" becomes "Nimali P." so full names are not shown publicly. */
+function display_name(string $name): string
+{
+    $parts = preg_split('/\s+/', trim($name));
+    $first = $parts[0] ?? '';
+    $last  = count($parts) > 1 ? ' ' . mb_substr(end($parts), 0, 1) . '.' : '';
+    return $first . $last;
+}
+
+/** Average rating and number of visible reviews for every room: [room_id => ['avg' => 4.7, 'count' => 3]]. */
+function room_rating_stats(PDO $pdo): array
+{
+    $rows = $pdo->query("SELECT room_id, AVG(rating) AS avg_rating, COUNT(*) AS review_count
+                         FROM reviews WHERE review_status = 'Visible' GROUP BY room_id")->fetchAll();
+    $stats = [];
+    foreach ($rows as $r) {
+        $stats[(int)$r['room_id']] = ['avg' => (float)$r['avg_rating'], 'count' => (int)$r['review_count']];
+    }
+    return $stats;
+}
+
+/** Overall average rating and review count for the whole villa. */
+function site_rating_stats(PDO $pdo): array
+{
+    $row = $pdo->query("SELECT AVG(rating) AS avg_rating, COUNT(*) AS review_count FROM reviews WHERE review_status = 'Visible'")->fetch();
+    return ['avg' => (float)($row['avg_rating'] ?? 0), 'count' => (int)($row['review_count'] ?? 0)];
+}
+
+/** Newest visible reviews, optionally for one room. */
+function latest_reviews(PDO $pdo, int $limit, int $roomId = 0): array
+{
+    $sql = "SELECT rv.rating, rv.comment, rv.created_at, u.name AS guest_name, r.room_name
+            FROM reviews rv
+            JOIN users u ON u.user_id = rv.user_id
+            JOIN rooms r ON r.room_id = rv.room_id
+            WHERE rv.review_status = 'Visible'";
+    $params = [];
+    if ($roomId > 0) {
+        $sql .= ' AND rv.room_id = ?';
+        $params[] = $roomId;
+    }
+    $stmt = $pdo->prepare($sql . ' ORDER BY rv.created_at DESC, rv.review_id DESC LIMIT ' . (int)$limit);
+    $stmt->execute($params);
+    return $stmt->fetchAll();
+}

@@ -12,6 +12,7 @@ USE azure_breeze_villa;
 
 -- Drop in reverse dependency order so the script can be re-run safely
 DROP TABLE IF EXISTS contact_messages;
+DROP TABLE IF EXISTS reviews;
 DROP TABLE IF EXISTS bookings;
 DROP TABLE IF EXISTS rooms;
 DROP TABLE IF EXISTS users;
@@ -72,6 +73,28 @@ CREATE TABLE bookings (
     REFERENCES rooms (room_id) ON DELETE RESTRICT ON UPDATE CASCADE,
   CONSTRAINT chk_bookings_dates CHECK (check_out > check_in)
 ) ENGINE=InnoDB;
+
+-- ------------------------------------------------------------
+-- reviews: one rating and comment per finished stay
+-- ------------------------------------------------------------
+CREATE TABLE reviews (
+  review_id     INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  booking_id    INT UNSIGNED NOT NULL,                 -- one review per booking
+  user_id       INT UNSIGNED NOT NULL,
+  room_id       INT UNSIGNED NOT NULL,
+  rating        TINYINT UNSIGNED NOT NULL,             -- 1 to 5 stars
+  comment       VARCHAR(1000) NOT NULL,
+  review_status ENUM('Visible','Hidden') NOT NULL DEFAULT 'Visible',
+  created_at    TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (review_id),
+  UNIQUE KEY uq_reviews_booking (booking_id),
+  KEY idx_reviews_room (room_id),
+  CONSTRAINT fk_reviews_booking FOREIGN KEY (booking_id) REFERENCES bookings (booking_id) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT fk_reviews_user    FOREIGN KEY (user_id)    REFERENCES users (user_id)       ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT fk_reviews_room    FOREIGN KEY (room_id)    REFERENCES rooms (room_id)       ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT chk_reviews_rating CHECK (rating BETWEEN 1 AND 5)
+) ENGINE=InnoDB;
+
 
 -- ------------------------------------------------------------
 -- contact_messages: enquiries sent from the Contact page
@@ -135,6 +158,47 @@ INSERT INTO bookings
 INSERT INTO contact_messages (name, email, phone, subject, message) VALUES
 ('Sample Visitor', 'visitor@example.com', '0701122334', 'Booking enquiry',
  'Hello, do you have a family suite available in December?');
+
+-- Sample finished stays (fictional) so you can test reviews straight away
+INSERT INTO bookings (user_id, room_id, check_in, check_out, guests, total_amount, booking_status)
+SELECT u.user_id, r.room_id, '2026-10-05', '2026-10-08', 2, 96000.00, 'Confirmed'
+FROM users u, rooms r
+WHERE u.email = 'guest@example.com' AND r.room_name = 'Garden Villa'
+  AND NOT EXISTS (SELECT 1 FROM bookings b WHERE b.user_id = u.user_id AND b.room_id = r.room_id AND b.check_in = '2026-10-05');
+
+INSERT INTO bookings (user_id, room_id, check_in, check_out, guests, total_amount, booking_status)
+SELECT u.user_id, r.room_id, '2026-10-10', '2026-10-12', 2, 50000.00, 'Confirmed'
+FROM users u, rooms r
+WHERE u.email = 'nimali@example.com' AND r.room_name = 'Ocean View Suite'
+  AND NOT EXISTS (SELECT 1 FROM bookings b WHERE b.user_id = u.user_id AND b.room_id = r.room_id AND b.check_in = '2026-10-10');
+
+INSERT INTO bookings (user_id, room_id, check_in, check_out, guests, total_amount, booking_status)
+SELECT u.user_id, r.room_id, '2026-09-20', '2026-09-23', 4, 114000.00, 'Confirmed'
+FROM users u, rooms r
+WHERE u.email = 'kasun@example.com' AND r.room_name = 'Family Suite'
+  AND NOT EXISTS (SELECT 1 FROM bookings b WHERE b.user_id = u.user_id AND b.room_id = r.room_id AND b.check_in = '2026-09-20');
+
+INSERT INTO bookings (user_id, room_id, check_in, check_out, guests, total_amount, booking_status)
+SELECT u.user_id, r.room_id, '2026-09-01', '2026-09-04', 2, 96000.00, 'Confirmed'
+FROM users u, rooms r
+WHERE u.email = 'nimali@example.com' AND r.room_name = 'Garden Villa'
+  AND NOT EXISTS (SELECT 1 FROM bookings b WHERE b.user_id = u.user_id AND b.room_id = r.room_id AND b.check_in = '2026-09-01');
+
+-- Sample reviews (guest@example.com has a finished stay with NO review, so you can write one)
+INSERT IGNORE INTO reviews (booking_id, user_id, room_id, rating, comment)
+SELECT b.booking_id, b.user_id, b.room_id, 5, 'Waking up to the sound of the waves was magical. The room was spotless and the staff were so friendly.'
+FROM bookings b JOIN users u ON u.user_id = b.user_id JOIN rooms r ON r.room_id = b.room_id
+WHERE u.email = 'nimali@example.com' AND r.room_name = 'Ocean View Suite' AND b.check_in = '2026-10-10';
+
+INSERT IGNORE INTO reviews (booking_id, user_id, room_id, rating, comment)
+SELECT b.booking_id, b.user_id, b.room_id, 4, 'Lots of space for our family and the pool was a big hit with the kids. Breakfast could have more variety.'
+FROM bookings b JOIN users u ON u.user_id = b.user_id JOIN rooms r ON r.room_id = b.room_id
+WHERE u.email = 'kasun@example.com' AND r.room_name = 'Family Suite' AND b.check_in = '2026-09-20';
+
+INSERT IGNORE INTO reviews (booking_id, user_id, room_id, rating, comment)
+SELECT b.booking_id, b.user_id, b.room_id, 5, 'A quiet, green retreat only minutes from the beach. We will definitely come back.'
+FROM bookings b JOIN users u ON u.user_id = b.user_id JOIN rooms r ON r.room_id = b.room_id
+WHERE u.email = 'nimali@example.com' AND r.room_name = 'Garden Villa' AND b.check_in = '2026-09-01';
 
 -- ============================================================
 -- USEFUL QUERIES (used by the PHP code)

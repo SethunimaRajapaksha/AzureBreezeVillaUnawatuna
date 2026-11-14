@@ -350,3 +350,23 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
 .stack { display: grid; gap: 24px; }
 .summary-card .btn-block { margin-top: 20px; }
 .form-group input:disabled { background: var(--glass-soft); color: var(--muted); }
+
+/* ===== Ratings and reviews ===== */
+.stars { color: #D9A93E; letter-spacing: 2px; white-space: nowrap; }
+.stars .off { color: #C9D6E2; }
+.rating-line { font-size: .85rem; color: var(--muted); margin: 6px 0 0; }
+.review-card { background: #fff; border-radius: 18px; padding: 26px; box-shadow: var(--shadow); display: flex; flex-direction: column; }
+.review-text { color: var(--navy); line-height: 1.7; margin: 12px 0; flex: 1; }
+.review-author { font-size: .85rem; color: var(--muted); font-weight: 600; }
+.overall-rating { display: flex; align-items: center; justify-content: center; gap: 10px; flex-wrap: wrap; margin: 0; }
+.big-score { font-family: var(--font-head); font-size: 2.2rem; }
+.review-done { margin: 0; font-size: .9rem; color: var(--muted); }
+.container.narrow { max-width: 720px; }
+.legend-label { font-size: .8rem; color: var(--muted); padding: 0; }
+fieldset.form-group { border: 0; padding: 0; margin: 0 0 16px; }
+.star-input { display: flex; flex-direction: row-reverse; justify-content: flex-end; gap: 4px; }
+.star-input input { position: absolute; opacity: 0; width: 0; height: 0; }
+.star-input label { font-size: 2.4rem; line-height: 1; color: #C9D6E2; cursor: pointer; margin: 0; }
+.star-input input:checked ~ label, .star-input label:hover, .star-input label:hover ~ label { color: var(--gold); }
+.star-input input:focus-visible + label { outline: 3px solid var(--cyan); border-radius: 6px; }
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }

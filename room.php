@@ -31,6 +31,8 @@ if ($checkIn !== '' && $checkOut !== '' && validate_stay($checkIn, $checkOut, $g
         'available' => $guests <= $room['max_guests'] && room_is_available($pdo, $roomId, $checkIn, $checkOut),
     ];
 }
+$roomReviews = latest_reviews($pdo, 10, $roomId);
+$roomRating  = room_rating_stats($pdo)[$roomId] ?? null;
 $bookQuery = $stayInfo ? '&check_in=' . urlencode($checkIn) . '&check_out=' . urlencode($checkOut) . '&guests=' . $guests : '';
 
 $pageTitle  = $room['room_name'];
@@ -43,6 +45,7 @@ include __DIR__ . '/includes/header.php';
     <div class="room-detail-info">
       <div class="eyebrow"><?= e(strtoupper($room['room_type'])) ?></div>
       <h1><?= e($room['room_name']) ?></h1>
+      <div class="rating-line"><?php if ($roomRating): ?><?= stars_html($roomRating['avg']) ?> <?= number_format($roomRating['avg'], 1) ?> (<?= $roomRating['count'] ?> review<?= $roomRating['count'] === 1 ? '' : 's' ?>)<?php else: ?>No reviews yet<?php endif; ?></div>
       <p class="lead-text"><?= e($room['description']) ?></p>
       <div class="room-meta"><span>Up to <?= (int)$room['max_guests'] ?> guests</span><span><?= e($room['bed_info']) ?></span></div>
       <h3>Facilities</h3>
@@ -66,4 +69,20 @@ include __DIR__ . '/includes/header.php';
     </div>
   </div>
 </section>
+<?php if ($roomReviews): ?>
+<section class="section band-soft">
+  <div class="container">
+    <h2 class="section-title">Guest reviews</h2>
+    <div class="card-grid three">
+      <?php foreach ($roomReviews as $rv): ?>
+        <article class="review-card">
+          <?= stars_html((float)$rv['rating']) ?>
+          <p class="review-text">&ldquo;<?= e($rv['comment']) ?>&rdquo;</p>
+          <div class="review-author"><?= e(display_name($rv['guest_name'])) ?> &middot; <?= e(date('M Y', strtotime($rv['created_at']))) ?></div>
+        </article>
+      <?php endforeach; ?>
+    </div>
+  </div>
+</section>
+<?php endif; ?>
 <?php include __DIR__ . '/includes/footer.php'; ?>

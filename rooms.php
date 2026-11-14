@@ -15,6 +15,7 @@ $errors = [];
 $nights = 0;
 $rooms  = [];
 
+$ratings = room_rating_stats($pdo);
 $types = $pdo->query("SELECT DISTINCT room_type FROM rooms WHERE room_status = 'active' ORDER BY room_type")->fetchAll(PDO::FETCH_COLUMN);
 
 if ($searched) {
@@ -89,6 +90,8 @@ include __DIR__ . '/includes/header.php';
           <div class="room-body">
             <h3><?= e($r['room_name']) ?></h3>
             <p><?= e($r['description']) ?></p>
+            <?php $rt = $ratings[(int)$r['room_id']] ?? null; ?>
+            <div class="rating-line"><?php if ($rt): ?><?= stars_html($rt['avg']) ?> <?= number_format($rt['avg'], 1) ?> (<?= $rt['count'] ?> review<?= $rt['count'] === 1 ? '' : 's' ?>)<?php else: ?>No reviews yet<?php endif; ?></div>
             <div class="room-meta"><span><?= (int)$r['max_guests'] ?> Guests</span><span><?= e($r['bed_info']) ?></span><span><?= e($r['room_type']) ?></span></div>
             <ul class="facility-list">
               <?php foreach (array_slice(facility_list($r['facilities']), 0, 4) as $f): ?><li><?= e($f) ?></li><?php endforeach; ?>
